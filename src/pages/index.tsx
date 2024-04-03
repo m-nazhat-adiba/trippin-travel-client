@@ -1,118 +1,212 @@
-import Image from "next/image";
+import { getCategory } from "@/api/getCategory";
+import Button from "@/components/buttons";
+import DestinationCard from "@/components/cards/DestinationCard";
+import ProductCard from "@/components/cards/ProductCard";
+import PromoCard from "@/components/cards/PromoCard";
+import Footer from "@/components/navigation/Footer";
+import Navbar from "@/components/navigation/Navbar";
 import { Inter } from "next/font/google";
+import Image from "next/image";
+import { ReactNode, useEffect, useState } from "react";
+import { Activity, Category } from "@/types";
+import { getActivities } from "@/api/getActivity";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [category, setCategory] = useState<Category[]>([]);
+  const [activites, setActivites] = useState<Activity[]>([]);
+
+  const fetchCategory = async () => {
+    try {
+      const responses = await getCategory();
+      setCategory(responses);
+    } catch (error) {
+      console.error("Error fetching category:", error);
+      // Handle error here
+    }
+  };
+
+  const fetchActivites = async () => {
+    try {
+      const responses = await getActivities();
+      setActivites(responses);
+    } catch (error) {
+      console.error("error activites", error);
+    }
+  };
+
+  const destinationMapper = (): ReactNode => {
+    if (category && category.length > 0) {
+      console.log("ada cok", category);
+      return category.map((item, key) =>
+        key < 5 ? <DestinationCard data={item} key={key} /> : null
+      );
+    } else {
+      console.log("bablas cok");
+      return <p>Kosong</p>;
+    }
+  };
+
+  const activityMapper = (): ReactNode => {
+    if (activites && activites.length > 0) {
+      console.log("ada activity cok", activites);
+      return activites.map((item, key) =>
+        key < 8 ? <ProductCard data={item} key={key} /> : null
+      );
+    } else {
+      return <p>kosong</p>;
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+    fetchActivites();
+  }, []);
+
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex gap-40 min-h-screen w-full max-w-screen flex-col items-center justify-between overflow-x-hidden ${inter.className}`}
     >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
+      <header className="w-full min-h-screen relative flex flex-col">
+        {/* Hero Background */}
+        <div className="bg-blue-900 opacity-40 absolute w-full h-screen top-0 -z-30" />
         <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          src="/Hero.jpg"
+          className=" w-full h-screen object-cover absolute -z-40 top-0"
+          alt="hero"
+          width={1920}
+          height={1116}
         />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
+        {/* Hero */}
+        <div className="container mx-auto">
+          <Navbar />
+        </div>
+        <div className="container mx-auto h-[calc(100vh_-_72px)] px-64 pb-20 w-full flex flex-col justify-center items-center text-white">
+          <h1 className="text-6xl text-center mb-6">
+            Exploring The Wonders of The World
+          </h1>
+          <p className="text-center mb-14">
+            Join us on epic adventures as we journey around the world visiting
+            some of the most breathtaking and iconic destination on the planet
           </p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+          <form className="w-full mx-auto">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 "
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+                placeholder="Search Mockups, Logos..."
+                required
+              />
+              <button
+                type="submit"
+                className="rounded-full text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="container mx-auto w-full h-32 bg-white flex items-center justify-between px-20">
+          <div className="text-nowrap">
+            <p>Follow us on:</p>
+          </div>
+          <div className="w-fit flex items-center gap-8">
+            <img src="/Trivago.png" alt="airbnb" className="h-8 w-auto" />
+            <img src="/Skyscanner.png" alt="airbnb" className="h-8 w-auto" />
+            <img src="/Airbnb.png" alt="airbnb" className="h-20 w-auto" />
+            <img src="/Garuda.png" alt="airbnb" className="h-24 w-auto pb-3" />
+          </div>
+        </div>
+      </header>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+      <section className="container mx-auto flex flex-col justify-between px-20">
+        <div className="flex justify-between mb-16 gap-8">
+          <div className="flex flex-col gap-4">
+            <h2 className="text-4xl font-medium">
+              Top Destination Around The World
+            </h2>
+            <p>Where do you want to go?</p>
+          </div>
+          <div className="h-fit w-1/4">
+            <Button variant="primary">See All Destination</Button>
+          </div>
+        </div>
+        <div className="flex justify-between">{destinationMapper()}</div>
+      </section>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
+      <section className="container mx-auto flex px-20 items-center justify-between py-10">
+        <figure className="max-w-[45%]">
+          <Image src="/Why-Us.jpg" height={1000} width={1000} alt="whyus" />
+        </figure>
+
+        <article className="flex flex-col justify-center gap-2 max-w-[50%]">
+          <h2 className="text-4xl mb-4">Why Us?</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
+            culpa commodi nemo repellat ipsam tempore natus. Cupiditate libero
+            doloribus optio repudiandae pariatur asperiores, porro nesciunt sit
+            eos ut non qui?
           </p>
-        </a>
-      </div>
+          <ul className="list-disc list-inside">
+            <li>Affordable</li>
+            <li>Responsive</li>
+            <li>Comfortable</li>
+            <li>Satisfying</li>
+          </ul>
+        </article>
+      </section>
+
+      <section className="container mx-auto flex flex-col px-20 w-full">
+        <div className="flex flex-col mb-16 gap-4">
+          <h2 className="text-4xl font-mendium">Most Popular Tours</h2>
+          <p className="max-w-[50%]">
+            Make unforgettable memories with exclussive tours, VIP access, small
+            groups and perfectly
+          </p>
+        </div>
+        <div className="grid grid-cols-4 gap-8">{activityMapper()}</div>
+      </section>
+
+      <section className="container mx-auto px-20 grid">
+        <h2 className="text-4xl font-medium mb-16">
+          Our Fantastic Promotion For Our Traveller
+        </h2>
+        <div className="flex gap-4 justify-between">
+          <PromoCard />
+          <PromoCard />
+          <PromoCard />
+        </div>
+      </section>
+
+      <footer className="container mx-auto">
+        <Footer />
+      </footer>
     </main>
   );
 }
