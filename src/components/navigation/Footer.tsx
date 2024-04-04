@@ -54,7 +54,7 @@ const Footer = () => {
       </div>
       <div className="flex flex-col md:w-[30%] items-center md:items-start">
         <p className="font-semibold text-base pb-5 text-center md:text-start">
-          Get in touch with us. We'd love to hear from you.
+          Get in touch with us. We&apos:d love to hear from you.
         </p>
         <Button variant="primary">Sign Up</Button>
       </div>

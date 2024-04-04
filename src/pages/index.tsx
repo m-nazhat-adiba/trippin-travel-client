@@ -6,15 +6,15 @@ import Footer from "@/components/navigation/Footer";
 import Navbar from "@/components/navigation/Navbar";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { getCategory } from "@/api/getCategory";
+import { useGetCategory } from "@/api/useGetCategory";
 import { ReactNode, useEffect } from "react";
-import { getActivities } from "@/api/getActivity";
+import { useGetActivities } from "@/api/useGetActivity";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const category = getCategory();
-  const activites = getActivities();
+  const category = useGetCategory();
+  const activites = useGetActivities();
 
   const destinationMapper = (): ReactNode => {
     if (category.loading) {
