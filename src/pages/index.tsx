@@ -1,68 +1,46 @@
-import { getCategory } from "@/api/getCategory";
 import Button from "@/components/buttons";
 import DestinationCard from "@/components/cards/DestinationCard";
 import ProductCard from "@/components/cards/ProductCard";
 import PromoCard from "@/components/cards/PromoCard";
 import Footer from "@/components/navigation/Footer";
 import Navbar from "@/components/navigation/Navbar";
-import { Inter } from "next/font/google";
 import Image from "next/image";
-import { ReactNode, useEffect, useState } from "react";
-import { Activity, Category } from "@/types";
+import { Inter } from "next/font/google";
+import { getCategory } from "@/api/getCategory";
+import { ReactNode, useEffect } from "react";
 import { getActivities } from "@/api/getActivity";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [category, setCategory] = useState<Category[]>([]);
-  const [activites, setActivites] = useState<Activity[]>([]);
-
-  const fetchCategory = async () => {
-    try {
-      const responses = await getCategory();
-      setCategory(responses);
-    } catch (error) {
-      console.error("Error fetching category:", error);
-      // Handle error here
-    }
-  };
-
-  const fetchActivites = async () => {
-    try {
-      const responses = await getActivities();
-      setActivites(responses);
-    } catch (error) {
-      console.error("error activites", error);
-    }
-  };
+  const category = getCategory();
+  const activites = getActivities();
 
   const destinationMapper = (): ReactNode => {
-    if (category && category.length > 0) {
-      console.log("ada cok", category);
-      return category.map((item, key) =>
+    if (category.loading) {
+      return <div>Loading...</div>;
+    } else if (category.error) {
+      return <div>Error: {category.error.message}</div>;
+    } else {
+      return category.data.map((item, key) =>
         key < 5 ? <DestinationCard data={item} key={key} /> : null
       );
-    } else {
-      console.log("bablas cok");
-      return <p>Kosong</p>;
     }
   };
 
   const activityMapper = (): ReactNode => {
-    if (activites && activites.length > 0) {
-      console.log("ada activity cok", activites);
-      return activites.map((item, key) =>
+    if (activites.loading) {
+      return <div>Loading...</div>;
+    } else if (activites.error) {
+      return <div>Error: {activites.error.message}</div>;
+    } else {
+      return activites.data.map((item, key) =>
         key < 8 ? <ProductCard data={item} key={key} /> : null
       );
-    } else {
-      return <p>kosong</p>;
     }
   };
 
-  useEffect(() => {
-    fetchCategory();
-    fetchActivites();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <main

@@ -18,7 +18,7 @@ export interface Activity {
   };
   title: string;
   description: string;
-  imageUrl: any;
+  imageUrls: any;
   price: number;
   price_discount: string;
   rating: number;

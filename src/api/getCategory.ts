@@ -1,26 +1,42 @@
-import { useFetch } from "@/hooks/useFetch.";
 import { Category } from "@/types";
+import { getData } from "@/utils/getData";
+import { useEffect, useState } from "react";
 
 const APP_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const url = `${APP_URL}/categories`;
 const APP_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-export const getCategory = async (): Promise<Category[]> => {
-  try {
-    const response = await useFetch(url, APP_KEY);
+export const getCategory = (): {
+  data: Category[];
+  error: any;
+  loading: boolean;
+} => {
+  const [data, setData] = useState<Category[]>([]);
+  const [error, setError] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-    const categories: Category[] = response.data.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      imageUrl: item.imageUrl,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    }));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getData(url, APP_KEY); // Await getData
+        const categories: Category[] = response.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          imageUrl: item.imageUrl,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        }));
+        console.log("getCategory", categories);
+        setData(categories);
+      } catch (error) {
+        console.error(error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-    console.log("getCategory", categories);
-    return categories;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return { data, error, loading };
 };
