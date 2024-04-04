@@ -3,6 +3,7 @@ import React from "react";
 interface ButtonProps {
   children: React.ReactNode;
   variant: "primary" | "secondary" | "link";
+  action?: any;
 }
 
 const VARIANTS = {
@@ -11,9 +12,10 @@ const VARIANTS = {
   link: "text-white",
 };
 
-const Button = ({ children, variant }: ButtonProps) => {
+const Button = ({ children, variant, action }: ButtonProps) => {
   return (
     <button
+      onClick={action}
       className={`p-2 rounded-full w-full items-center whitespace-nowrap text-base ${VARIANTS[variant]}`}
     >
       {children}

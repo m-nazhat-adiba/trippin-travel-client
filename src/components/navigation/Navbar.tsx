@@ -2,6 +2,11 @@ import React from "react";
 import Button from "../buttons";
 
 const Navbar = () => {
+  const handleSignIn = () => {
+    window.location.href =
+      "https://trippin-travel-admin-ui-93ir-338wpktjf-m-nazhat-adiba.vercel.app/";
+  };
+
   return (
     <nav className="w-full flex justify-between py-4 items-center">
       <div>
@@ -14,7 +19,9 @@ const Navbar = () => {
         <Button variant="link">About Us</Button>
       </div>
       <div className="flex w-32">
-        <Button variant="secondary">Sign Up</Button>
+        <Button action={handleSignIn} variant="secondary">
+          Sign in
+        </Button>
       </div>
     </nav>
   );
