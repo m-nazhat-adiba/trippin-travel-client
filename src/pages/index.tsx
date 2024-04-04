@@ -9,12 +9,14 @@ import { Inter } from "next/font/google";
 import { useGetCategory } from "@/api/useGetCategory";
 import { ReactNode, useEffect } from "react";
 import { useGetActivities } from "@/api/useGetActivity";
+import { useGetPromo } from "@/api/useGetPromo";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const category = useGetCategory();
   const activites = useGetActivities();
+  const promos = useGetPromo();
 
   const destinationMapper = (): ReactNode => {
     if (category.loading) {
@@ -36,6 +38,18 @@ export default function Home() {
     } else {
       return activites.data.map((item, key) =>
         key < 8 ? <ProductCard data={item} key={key} /> : null
+      );
+    }
+  };
+
+  const promoMapper = (): ReactNode => {
+    if (promos.loading) {
+      return <p>Loading...</p>;
+    } else if (promos.error) {
+      return <p>Error: {promos.error.message}</p>;
+    } else {
+      return promos.data.map((item, key) =>
+        key < 4 ? <PromoCard data={item} key={key} /> : null
       );
     }
   };
@@ -175,11 +189,7 @@ export default function Home() {
         <h2 className="text-4xl font-medium mb-16">
           Our Fantastic Promotion For Our Traveller
         </h2>
-        <div className="flex gap-4 justify-between">
-          <PromoCard />
-          <PromoCard />
-          <PromoCard />
-        </div>
+        <div className="grid grid-cols-4 gap-8">{promoMapper()}</div>
       </section>
 
       <footer className="container mx-auto">
