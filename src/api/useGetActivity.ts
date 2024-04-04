@@ -6,7 +6,7 @@ const APP_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const url = `${APP_URL}/activities`;
 const APP_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-export const getActivities = (): {
+export const useGetActivities = (): {
   data: Activity[];
   error: any;
   loading: boolean;

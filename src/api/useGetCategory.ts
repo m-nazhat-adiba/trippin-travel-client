@@ -6,7 +6,7 @@ const APP_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const url = `${APP_URL}/categories`;
 const APP_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-export const getCategory = (): {
+export const useGetCategory = (): {
   data: Category[];
   error: any;
   loading: boolean;
